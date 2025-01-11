@@ -20,5 +20,4 @@ public @interface Roles {
      * @return role编码
      */
     String[] value();
-
 }

@@ -18,7 +18,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +26,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import java.io.IOException;
 
 /**
  * 鉴权相关的Controller.
@@ -44,7 +44,6 @@ public class AuthController {
      * user service.
      */
     private final UserService userService;
-
     private final CaptchaService captchaService;
 
     private static final String CAPTCHA_KEY = "captchaKey";
@@ -104,7 +103,7 @@ public class AuthController {
     @Operation(summary = "切换用户")
     public R<LoginTokenDto> switchRole(@PathVariable String roleCode) {
         NumberWithFormat userId =
-            (NumberWithFormat) StpUtil.getExtra(SaTokenConfigure.JWT_USER_ID_KEY);
+                (NumberWithFormat) StpUtil.getExtra(SaTokenConfigure.JWT_USER_ID_KEY);
         LoginTokenDto tokenDto = userService.switchRole(userId.longValue(), roleCode);
         return R.ok(tokenDto);
     }
@@ -127,7 +126,7 @@ public class AuthController {
     @GetMapping("/captcha")
     @Operation(summary = "验证码")
     public void captcha(HttpServletRequest request, HttpServletResponse response)
-        throws IOException {
+            throws IOException {
         Pair<String, ICaptcha> captchaPair = captchaService.create();
         HttpSession session = request.getSession();
         session.setAttribute(CAPTCHA_KEY, captchaPair.getKey());
